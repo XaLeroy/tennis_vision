@@ -5,5 +5,5 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 # Then the rest
 COPY . .
-CMD uvicorn api.fast_api:app --host 0.0.0.0
-#--port ${PORT:-8000}
+RUN printenv
+CMD uvicorn api.fast_api:app --host 0.0.0.0 --port $PORT
