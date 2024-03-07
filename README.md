@@ -2,6 +2,10 @@
 
 ***Tennis recognition project***
 
+To run this code, you need toi download pre-trained models:
+  - `wget https://github.com/patrick013/Object-Detection---Yolov3/raw/master/model/yolov3.weights -P yolo_v3/`
+  - `wget https://github.com/ArtLabss/tennis-tracking/raw/main/WeightsTracknet/model.1 -P tracknet/`
+
 <u>**Main objectives**</u>
 
 1. **Points count**
