@@ -22,10 +22,10 @@ def predict(minimap=0, bounce=0, input_video_name=None, ouput_video_name=None):
 
 @app.post("/savefile")
 async def save_file(
-    video_file: UploadFile = File(...)):
+    file: UploadFile = File(...)):
 
     # check if the file is a video
-    if video_file.content_type != "video/mp4":
+    if file.content_type != "video/mp4":
         return JSONResponse(
             status_code=400, content={"message": "Only video files are allowed"}
         )
