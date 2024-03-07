@@ -35,7 +35,14 @@ async def save_file(
     save_directory = "../VideoInput"
     video_path = os.path.join(save_directory, video_name)
 
+    try:
+        with open(video_path, "wb") as buffer:
+            contents = await video_file.read()
+            buffer.write(contents)
 
-    with open(video_path, "wb") as buffer:
-        contents = await video_file.read()
-        buffer.write(contents)
+        return JSONResponse(status_code=200, content={"message": "File treated successfully"})
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500, content={"message": f"Error saving file: {str(e)}"}
+        )
