@@ -29,20 +29,22 @@ async def save_file(
         return JSONResponse(
             status_code=400, content={"message": "Only video files are allowed"}
         )
+    print(type(file), file.filename, file)
+    return JSONResponse(status_code=200, content={"message": "File treated successfully"})
 
-    video_name = f"{uuid.uuid4()}.mp4"
+    #video_name = f"{uuid.uuid4()}.mp4"
     #save the file in video input directory
-    save_directory = "../VideoInput"
-    video_path = os.path.join(save_directory, video_name)
+    #save_directory = "../VideoInput"
+    #video_path = os.path.join(save_directory, video_name)
 
-    try:
-        with open(video_path, "wb") as buffer:
-            contents = await video_file.read()
-            buffer.write(contents)
+    # try:
+    #     with open(video_path, "wb") as buffer:
+    #         contents = await video_file.read()
+    #         buffer.write(contents)
 
-        return JSONResponse(status_code=200, content={"message": "File treated successfully"})
+    #     return JSONResponse(status_code=200, content={"message": "File treated successfully"})
 
-    except Exception as e:
-        return JSONResponse(
-            status_code=500, content={"message": f"Error saving file: {str(e)}"}
-        )
+    # except Exception as e:
+    #     return JSONResponse(
+    #         status_code=500, content={"message": f"Error saving file: {str(e)}"}
+    #     )
