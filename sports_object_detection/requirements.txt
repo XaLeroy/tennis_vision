@@ -1,0 +1,9 @@
+deep_sort_realtime
+imutils
+matplotlib
+moviepy
+numpy
+opencv_python
+tensorflow
+tqdm
+ultralytics
