@@ -1,3 +1,7 @@
+tracknet/
+yolo_v3/yolov3.weights
+.python-version
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -10,23 +10,24 @@ def crop_center(image):
     max_size_index = np.argmax(shape)
     diff1 = abs((shape[0] - shape[1]) // 2)
     diff2 = shape[max_size_index] - shape[1 - max_size_index] - diff1
-    return image[:, diff1: -diff2] if max_size_index == 1 else image[diff1: -diff2, :]
+    return image[:, diff1:-diff2] if max_size_index == 1 else image[diff1:-diff2, :]
 
 
 def get_dtype():
-    dev = 'cuda' if torch.cuda.is_available() else 'cpu'
+    # consider also mps
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(dev)
-    if dev == 'cuda':
+    if dev == "cuda":
         dtype = torch.cuda.FloatTensor
     else:
         dtype = torch.FloatTensor
-    print(f'Using device {device}')
+    print(f"Using device {device}")
     return dtype
 
 
 def get_video_properties(video):
     # Find OpenCV version
-    (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
+    (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split(".")
 
     # get videos properties
     if int(major_ver) < 3:
@@ -45,17 +46,28 @@ def get_video_properties(video):
 def str2bool(v):
     if isinstance(v, bool):
         return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+    if v.lower() in ("yes", "true", "t", "y", "1"):
         return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+    elif v.lower() in ("no", "false", "f", "n", "0"):
         return False
     else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+        raise argparse.ArgumentTypeError("Boolean value expected.")
 
 
 def get_stickman_line_connection():
     # stic kman line connection with keypoints indices for R-CNN
     line_connection = [
-        (7, 9), (7, 5), (10, 8), (8, 6), (6, 5), (15, 13), (13, 11), (11, 12), (12, 14), (14, 16), (5, 11), (12, 6)
+        (7, 9),
+        (7, 5),
+        (10, 8),
+        (8, 6),
+        (6, 5),
+        (15, 13),
+        (13, 11),
+        (11, 12),
+        (12, 14),
+        (14, 16),
+        (5, 11),
+        (12, 6),
     ]
     return line_connection
