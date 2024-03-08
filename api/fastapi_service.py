@@ -9,6 +9,16 @@ app = FastAPI()
 
 @app.post("/convert")
 async def convert_video_to_bw_frame(file: UploadFile = File(...)):
+
+    #save the file in video input directory
+    video_name = f"{uuid.uuid4()}.mp4"
+    save_directory = "../VideoInput"
+    video_path = os.path.join(save_directory, video_name)
+    with open(video_path, "wb") as buffer:
+        contents = await video_file.read()
+        buffer.write(contents)
+
+
     with tempfile.NamedTemporaryFile(delete=True) as temp_file:
         temp_file.write(await file.read())
         temp_file.seek(0)  # Go back to the start of the file
