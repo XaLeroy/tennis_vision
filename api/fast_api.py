@@ -1,10 +1,11 @@
-from fastapi import FastAPI, UploadFile
-from fastapi.param_functions import File
-from fastapi.responses import JSONResponse
-import subprocess
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import StreamingResponse
+import cv2
+from PIL import Image
+import io
+import tempfile
 import os
 import uuid
-
 
 app = FastAPI()
 
@@ -21,26 +22,34 @@ def predict(minimap=0, bounce=0, input_video_name=None, ouput_video_name=None):
 
 
 @app.post("/savefile")
-async def save_file(file: UploadFile = File(...)):
+async def convert_video_to_bw_frame(file: UploadFile = File(...)):
 
-    # check if the file is a video
-    if file.content_type != "video/mp4":
-        return JSONResponse(status_code=400, content={"message": "Only video files are allowed"})
-    return JSONResponse(status_code=200, content={"message": "File treated successfully"})
-
-    #video_name = f"{uuid.uuid4()}.mp4"
     #save the file in video input directory
-    #save_directory = "../VideoInput"
-    #video_path = os.path.join(save_directory, video_name)
+    video_name = f"{uuid.uuid4()}.mp4"
+    save_directory = "/home/rs_munozcarrasco/tennis_vision/api/apivideos/"
+    video_path = os.path.join(save_directory, video_name)
+    with open(video_path, "wb") as buffer:
+        contents = await file.read()
+        buffer.write(contents)
 
-    # try:
-    #     with open(video_path, "wb") as buffer:
-    #         contents = await video_file.read()
-    #         buffer.write(contents)
 
-    #     return JSONResponse(status_code=200, content={"message": "File treated successfully"})
+    #with tempfile.NamedTemporaryFile(delete=True) as temp_file:
+    with open(video_path, "rb") as temp_file:
+        #temp_file.write(await file.read())
+        #temp_file.seek(0)  # Go back to the start of the file
 
-    # except Exception as e:
-    #     return JSONResponse(
-    #         status_code=500, content={"message": f"Error saving file: {str(e)}"}
-    #     )
+        cap = cv2.VideoCapture(temp_file.name)
+        success, frame = cap.read()  # Read the first frame
+        if success:
+            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
+            is_success, buffer = cv2.imencode(".jpg", gray_frame)
+            if is_success:
+                # Convert buffer to a bytes-like object
+                buffer_bytes = io.BytesIO(buffer)
+                buffer_bytes.seek(0)  # Go to the start of the BytesIO object
+
+                return StreamingResponse(buffer_bytes, media_type="image/jpeg")
+
+    # If the process fails, return an error response
+    return {"error": "Failed to process the video"}
+
