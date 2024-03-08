@@ -4,6 +4,8 @@ import cv2
 from PIL import Image
 import io
 import tempfile
+import os
+import uuid
 
 app = FastAPI()
 
@@ -15,7 +17,7 @@ async def convert_video_to_bw_frame(file: UploadFile = File(...)):
     save_directory = "../VideoInput"
     video_path = os.path.join(save_directory, video_name)
     with open(video_path, "wb") as buffer:
-        contents = await video_file.read()
+        contents = await file.read()
         buffer.write(contents)
 
 
